@@ -3997,7 +3997,6 @@ function pushSection(sec){
   if(!CFG.GAS_URL){setSS('Configure URL in Setup tab','err');return Promise.reject('no url');}
   return fetch(CFG.GAS_URL,{
     method:'POST',
-    headers:{'Content-Type':'application/json'},
     body:JSON.stringify({token:CFG.ADMIN_TOKEN,section:sec,data:S.data[sec]})
   }).then(function(r){return r.json();});
 }
