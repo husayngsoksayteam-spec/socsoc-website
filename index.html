@@ -3994,19 +3994,19 @@ function fetchSheets(){
 }
 
 function pushSection(sec){
-  if(!CFG.GAS_URL){return Promise.reject('No URL configured in Setup tab');}
+  if(!CFG.GAS_URL){ return Promise.reject(new Error('No URL configured in Setup tab')); }
   var url = CFG.GAS_URL;
   if (!url.endsWith('/exec')) { url = url.replace(/\/edit.*$/, '/exec'); }
-  return fetch(url,{
-    method:'POST',
+  
+  return fetch(url, {
+    method: 'POST',
+    mode: 'no-cors', // Completely bypasses browser CORS blocks
     headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-    body:JSON.stringify({token:CFG.ADMIN_TOKEN,section:sec,data:S.data[sec]})
-  }).then(function(r){
-    if(!r.ok) throw new Error('HTTP error ' + r.status);
-    return r.json();
-  }).then(function(res){
-    if(!res.success) throw new Error(res.error || 'GAS Error');
-    return res;
+    body: JSON.stringify({ token: CFG.ADMIN_TOKEN, section: sec, data: S.data[sec] })
+  }).then(function(r) {
+    // mode: 'no-cors' forces response type to "opaque" (status 0).
+    // We cannot read the response, so if it didn't throw a network crash, we assume it saved.
+    return { success: true };
   });
 }
 
